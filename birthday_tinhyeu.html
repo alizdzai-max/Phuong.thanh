@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffd9ea">
+<title>Happy 16th Birthday, Tinhyeu! 🎂</title>
+<style>
+/* =========================================================
+   FAIRY GARDEN BIRTHDAY – Tinhyeu 16
+   1. Biến màu & nền   2. Layout   3. Thành phần chung
+   4. Từng màn hình    5. Hiệu ứng
+   ========================================================= */
+:root{
+  --pink:#ffd9ea;--pink2:#ff9ec7;--pink3:#e8579a;
+  --lav:#e9defe;--lav2:#bfa8f5;--lav3:#7a5bc7;
+  --cream:#fffaf2;--mint:#dff5e3;--mint2:#8fd3a6;--mint3:#3f9d63;
+  --ink:#4b3b68;--ink2:#7b6a96;
+  --card:rgba(255,255,255,.86);--r:22px;
+  --font:ui-rounded,"SF Pro Rounded","Nunito","Quicksand","Varela Round","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font-family:var(--font);color:var(--ink);line-height:1.5;overflow-x:hidden;
+  background:linear-gradient(160deg,#fff4f9 0%,#f3e8ff 48%,#e4f7ea 100%) fixed}
+button{font-family:inherit;cursor:pointer;border:0;color:inherit;background:none;padding:0}
+input{font-family:inherit}
+h1,h2,h3,p{margin:0}
+
+/* ---------- Lớp nền trang trí ---------- */
+#amb{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+#amb .star{position:absolute;color:#fff;text-shadow:0 0 8px #ffb8dc,0 0 14px #bfa8f5;animation:twinkle 3s ease-in-out infinite}
+#amb .bf{position:absolute;width:44px;height:36px;animation:wander var(--d,24s) linear infinite;opacity:.85}
+#garden{position:fixed;left:0;right:0;bottom:0;height:86px;z-index:2;pointer-events:none}
+#garden svg{width:100%;height:100%;display:block}
+.sway{transform-box:fill-box;transform-origin:50% 100%;animation:sway 3.6s ease-in-out infinite alternate}
+.wing{transform-box:fill-box;animation:flap .45s ease-in-out infinite alternate}
+.wl{transform-origin:100% 50%}.wr{transform-origin:0 50%}
+
+/* ---------- Thanh trên cùng ---------- */
+#top{position:sticky;top:0;z-index:30;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;
+  background:linear-gradient(#fff4f9f2 70%,#fff4f900)}
+.bar-row{display:flex;align-items:center;gap:8px;max-width:560px;margin:0 auto}
+.ibtn{width:40px;height:40px;border-radius:50%;background:#fff;box-shadow:0 3px 10px #b9a2f055;font-size:18px;
+  display:grid;place-items:center;transition:transform .15s,box-shadow .15s;flex:none}
+.ibtn:active{transform:scale(.86)}
+.ibtn[disabled]{opacity:.35;cursor:default}
+.ibtn.off{filter:grayscale(1);opacity:.7}
+#vol{width:96px;accent-color:var(--pink3);min-width:0}
+.spacer{flex:1}
+#prog{position:relative;max-width:560px;margin:8px auto 0;padding:0 2px}
+#prog .track{position:absolute;left:18px;right:18px;top:50%;height:6px;margin-top:-3px;background:#fff;border-radius:6px;box-shadow:inset 0 1px 3px #b9a2f044}
+#prog .track i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--pink2),var(--lav2));transition:width .6s}
+#steps{position:relative;display:flex;justify-content:space-between}
+.step{width:36px;height:36px;border-radius:50%;background:#fff;font-size:17px;display:grid;place-items:center;
+  box-shadow:0 2px 8px #b9a2f055;transition:transform .2s,background .3s}
+.step.done{background:var(--mint)}
+.step.cur{background:linear-gradient(135deg,var(--pink2),var(--pink3));transform:scale(1.18);box-shadow:0 4px 14px #e8579a66}
+.step.locked{opacity:.5;filter:grayscale(.6);cursor:default}
+.step:not(.locked):active{transform:scale(.9)}
+
+/* ---------- Sân khấu & chuyển màn ---------- */
+#stage{max-width:560px;margin:0 auto;padding:6px 14px 120px;position:relative;z-index:5}
+.screen{display:none}
+.screen.active{display:block;animation:enter .6s cubic-bezier(.2,.9,.3,1) both}
+#wipe{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0;transition:opacity .38s;
+  background:radial-gradient(circle at 50% 50%,#fff 0,#ffe3f1 40%,#e9defe 100%)}
+#wipe.on{opacity:1}
+.title{text-align:center;font-size:clamp(24px,7vw,32px);font-weight:900;margin:6px 0 2px;
+  background:linear-gradient(90deg,var(--pink3),var(--lav3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{text-align:center;color:var(--ink2);font-size:15px;margin-bottom:12px}
+.card{background:var(--card);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:var(--r);
+  padding:16px;box-shadow:0 10px 30px #b9a2f033;border:1.5px solid #fff;margin-bottom:14px}
+.badge{display:inline-block;padding:3px 12px;border-radius:99px;background:var(--lav);color:var(--lav3);font-weight:800;font-size:13px;margin-bottom:8px}
+
+/* ---------- Nút ---------- */
+.btn{padding:12px 22px;border-radius:999px;background:linear-gradient(135deg,var(--pink2),var(--pink3));color:#fff;
+  font-weight:800;font-size:16px;box-shadow:0 6px 16px #e8579a55;transition:transform .15s,box-shadow .15s,filter .2s}
+.btn:active{transform:scale(.93);box-shadow:0 2px 8px #e8579a55}
+.btn.alt{background:linear-gradient(135deg,var(--lav2),var(--lav3));box-shadow:0 6px 16px #7a5bc755}
+.btn.mint{background:linear-gradient(135deg,var(--mint2),var(--mint3));box-shadow:0 6px 16px #3f9d6355}
+.btn.ghost{background:#fff;color:var(--lav3);box-shadow:0 3px 10px #b9a2f055}
+.btn.sm{padding:8px 16px;font-size:14px}
+.btn[disabled]{filter:grayscale(.7);opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.pulse{animation:pulse 1.5s ease-in-out infinite}
+.btn[hidden]{display:none}
+.center{text-align:center}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+
+/* ---------- Modal / toast ---------- */
+#modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:#4b3b6866;backdrop-filter:blur(3px)}
+#modal.show{display:flex}
+.mbox{background:#fff;border-radius:28px;padding:22px 20px;max-width:390px;width:100%;max-height:86vh;overflow:auto;text-align:center;
+  box-shadow:0 20px 60px #4b3b6855;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both;border:3px solid var(--pink)}
+.mbox .mic{font-size:46px;line-height:1.1}
+.mbox h3{margin:4px 0 6px;font-size:22px;color:var(--pink3)}
+.mbox .mtxt{font-size:15px;color:var(--ink);text-align:left}
+.mbox .mtxt.c{text-align:center}
+.mbtns{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,20px);opacity:0;z-index:95;max-width:88vw;
+  background:#fff;color:var(--ink);padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;box-shadow:0 8px 24px #7a5bc744;
+  border:2px solid var(--pink);transition:.3s;pointer-events:none;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:70}
+.fl{position:fixed;bottom:-70px;z-index:65;pointer-events:none;animation:rise var(--d,6s) ease-in forwards}
+
+/* ---------- Màn 0: thư ---------- */
+#introTxt{text-align:center;font-size:clamp(20px,5.6vw,26px);font-weight:800;min-height:68px;margin:14px 0 10px;color:var(--lav3)}
+#introTxt::after{content:'|';animation:blink 1s steps(1) infinite;color:var(--pink3)}
+#introTxt.done::after{content:''}
+.envwrap{padding:124px 0 10px}
+.env{position:relative;width:min(76vw,300px);aspect-ratio:3/2;margin:0 auto;perspective:900px;display:block;
+  animation:bob 2.6s ease-in-out infinite;filter:drop-shadow(0 12px 18px #b9a2f066)}
+.env .back{position:absolute;inset:0;background:#f7b4d3;border-radius:12px}
+.env .letter{position:absolute;left:7%;right:7%;top:7%;bottom:7%;background:#fffdf7;border-radius:8px;z-index:1;
+  display:flex;align-items:flex-start;justify-content:center;padding-top:8px;font-weight:900;color:var(--pink3);font-size:14px;
+  transition:transform .9s .55s cubic-bezier(.2,.9,.3,1.15);box-shadow:0 0 0 2px #ffe3f1 inset}
+.env .pocket{position:absolute;inset:0;z-index:2;border-radius:12px;background:linear-gradient(160deg,#ffc9e1,#ff9ec7);
+  clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%)}
+.env .flap{position:absolute;left:0;right:0;top:0;height:58%;z-index:3;background:linear-gradient(#ff8dbd,#ff9ec7);
+  clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .6s ease,z-index 0s .3s;border-radius:12px 12px 0 0}
+.env .seal{position:absolute;left:50%;top:46%;width:42px;height:42px;margin:-21px 0 0 -21px;z-index:4;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#ffd1e6,#e8579a);display:grid;place-items:center;font-size:20px;transition:opacity .3s;box-shadow:0 3px 8px #e8579a66}
+.env.open{animation:none}
+.env.open .flap{transform:rotateX(180deg);z-index:0}
+.env.open .seal{opacity:0}
+.env.open .letter{transform:translateY(-66%)}
+.tap{text-align:center;color:var(--ink2);font-weight:700;margin-top:14px;animation:blink 1.8s ease-in-out infinite}
+.line{opacity:0;transform:translateY(12px);transition:opacity .7s,transform .7s}
+.line.show{opacity:1;transform:none}
+.greet{text-align:center;margin-top:14px}
+.greet .g1{font-size:clamp(22px,6.4vw,28px);font-weight:900;color:var(--pink3)}
+.greet .g2,.greet .g3{margin-top:6px;color:var(--ink)}
+
+/* ---------- Màn 1: Hóa học ---------- */
+.lab{position:relative;height:128px;margin-bottom:10px}
+.lab svg{width:100%;height:100%}
+.lab .bub{position:absolute;bottom:18px;border-radius:50%;background:#fff9;border:1.5px solid #fff;animation:bubble var(--d,3s) ease-in infinite;opacity:0}
+.problem{font-size:15.5px;margin:4px 0 10px}
+.problem b{color:var(--lav3)}
+.chem{font-weight:800;white-space:nowrap}
+.ask{display:flex;gap:8px}
+.ask input{flex:1;min-width:0;padding:12px 16px;border-radius:99px;border:2.5px solid var(--lav2);font-size:17px;font-weight:800;color:var(--ink);background:#fff;outline:none;text-align:center}
+.ask input:focus{border-color:var(--pink3);box-shadow:0 0 0 4px #ff9ec733}
+.ask input:disabled{background:var(--mint);border-color:var(--mint2)}
+.fb{margin-top:10px;font-size:14.5px;border-radius:14px;padding:0}
+.fb.bad{padding:10px 12px;background:#fff0f6;border:2px dashed var(--pink2)}
+.fb.good{padding:10px 12px;background:var(--mint);border:2px solid var(--mint2);font-weight:700}
+.shake{animation:shake .45s}
+.magic{position:fixed;left:50%;top:44%;width:30px;height:30px;margin:-15px;border-radius:50%;z-index:68;pointer-events:none;
+  background:radial-gradient(circle,#fff 0,#ffd1e6 35%,#bfa8f500 70%);animation:magic 1.2s ease-out forwards}
+.pt{display:grid;grid-template-columns:repeat(18,1fr);gap:2px;margin-top:6px}
+.pt button{aspect-ratio:1;border-radius:4px;font-size:clamp(6.5px,2.15vw,11px);font-weight:900;color:var(--ink);display:grid;place-items:center;
+  line-height:1;transition:transform .15s;background:var(--cream)}
+.pt button:active{transform:scale(1.4)}
+.pt .nm{background:#d5f2dd}.pt .ng{background:#d9e2ff}.pt .hl{background:#e7d6ff}.pt .ak{background:#ffd0e4}
+.pt .ae{background:#ffe2cc}.pt .md{background:#fff3b8}.pt .pm{background:#e8ecf4}.pt .tm{background:#f6e9ff}
+.pt .glow{animation:glow 1.3s ease-out;position:relative;z-index:3}
+#ptinfo{min-height:44px;text-align:center;font-size:14px;margin-top:8px;color:var(--ink2);font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font-size:11px;color:var(--ink2);margin-top:4px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:3px;vertical-align:-1px}
+
+/* ---------- Màn 2: Lời chúc ---------- */
+.wcard{position:relative;text-align:center;padding:20px 16px 16px;overflow:hidden}
+.wcard .flag{font-size:46px;line-height:1}
+.wcard .lname{font-weight:900;color:var(--lav3);margin-top:2px;font-size:17px}
+.wcard .lname small{color:var(--ink2);font-weight:700}
+.wcard .native{font-size:clamp(19px,5.5vw,23px);font-weight:800;margin:12px 0 8px;color:var(--ink);line-height:1.45}
+.wcard .vi{font-size:14.5px;color:var(--ink2);font-style:italic;padding:8px 10px;background:var(--lav);border-radius:14px}
+.wcard.swap{animation:swap .45s cubic-bezier(.2,.9,.3,1)}
+.vstat{min-height:42px;font-size:13.5px;margin-top:10px;font-weight:700;color:var(--ink2)}
+.vstat.warn{color:#b8386f;background:#fff0f6;border-radius:12px;padding:8px 10px;border:1.5px dashed var(--pink2)}
+.speaking .flag{animation:bob .6s ease-in-out infinite}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;scroll-snap-type:x proximity;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;width:44px;height:44px;border-radius:50%;background:#fff;font-size:22px;display:grid;place-items:center;box-shadow:0 2px 8px #b9a2f044;scroll-snap-align:center}
+.chip.on{background:linear-gradient(135deg,var(--pink2),var(--lav2));transform:scale(1.12)}
+.navrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.counter{font-weight:900;color:var(--lav3)}
+
+/* ---------- Màn 3: Quiz ---------- */
+.qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.qcount{font-weight:900;color:var(--lav3)}
+.lv{padding:3px 12px;border-radius:99px;font-weight:900;font-size:13px;color:#fff}
+.lv.B1{background:var(--mint3)}.lv.B2{background:var(--lav3)}.lv.C1{background:var(--pink3)}
+.segs{display:flex;gap:4px;margin-bottom:12px}
+.segs i{flex:1;height:8px;border-radius:6px;background:#fff;box-shadow:inset 0 1px 2px #b9a2f044;transition:background .4s}
+.segs i.on{background:linear-gradient(90deg,var(--pink2),var(--lav2))}
+.segs i.now{background:var(--lav)}
+.qtext{font-size:17.5px;font-weight:700;margin:6px 0 12px;line-height:1.55}
+.blank{display:inline-block;min-width:64px;border-bottom:3px dashed var(--pink2);color:transparent;user-select:none}
+.opts{display:grid;gap:9px}
+.opt{display:flex;gap:10px;align-items:center;text-align:left;width:100%;padding:12px 14px;border-radius:16px;background:#fff;border:2.5px solid var(--lav);
+  font-size:16.5px;font-weight:700;transition:transform .15s,background .2s,border-color .2s}
+.opt b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--lav);color:var(--lav3);display:grid;place-items:center;font-size:14px}
+.opt:active{transform:scale(.97)}
+.opt.ok{background:var(--mint);border-color:var(--mint3)}.opt.ok b{background:var(--mint3);color:#fff}
+.opt.no{background:#ffe6f0;border-color:var(--pink2);opacity:.65;animation:shake .45s}
+.opt:disabled{cursor:default}
+.cakelock{text-align:center;font-size:13px;color:var(--ink2);font-weight:700;margin-bottom:6px}
+
+/* ---------- Màn 4: Thổi nến ---------- */
+.cakewrap{position:relative;max-width:340px;margin:0 auto}
+.cakewrap svg{width:100%;height:auto;overflow:visible;display:block}
+.glowhalo{position:absolute;left:50%;top:28%;width:90%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,#fff6b855,#ffd1e633 45%,transparent 70%);animation:halo 2.4s ease-in-out infinite;pointer-events:none}
+.glowhalo.dim{opacity:.1;animation:none;transition:opacity 1s}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flicker .35s ease-in-out infinite alternate;transition:opacity .25s,transform .25s}
+.candle.out .flame,.candle.out .fglow{opacity:0;transform:scale(0)}
+.smoke{opacity:0}
+.candle.out .smoke{animation:smoke 1.3s ease-out}
+#count{text-align:center;font-size:64px;font-weight:900;height:84px;line-height:84px;color:var(--pink3);text-shadow:0 4px 0 #fff,0 0 20px #ff9ec799}
+#count.tick{animation:tick .9s ease-out}
+
+/* ---------- Màn 5: Hộp quà ---------- */
+.giftwrap{height:270px;display:grid;place-items:center}
+.gift{position:relative;width:210px;height:210px;animation:bob 2.2s ease-in-out infinite;display:block}
+.gift.open{animation:none}
+.g-box{position:absolute;left:14px;right:14px;bottom:0;height:128px;background:linear-gradient(#ffb3d4,#ff86b8);border-radius:6px 6px 16px 16px;box-shadow:0 14px 20px #e8579a33,inset 0 -10px 0 #0000001a}
+.g-box::after{content:'';position:absolute;left:50%;top:0;bottom:0;width:30px;margin-left:-15px;background:linear-gradient(90deg,#d9c8ff,#bfa8f5,#d9c8ff)}
+.g-lid{position:absolute;left:0;right:0;top:26px;height:58px;background:linear-gradient(#ffc7e1,#ff9ec7);border-radius:12px;z-index:2;
+  transition:transform .9s cubic-bezier(.3,1.5,.5,1);box-shadow:0 6px 10px #0001}
+.g-lid::after{content:'';position:absolute;left:50%;top:0;bottom:0;width:30px;margin-left:-15px;background:linear-gradient(90deg,#d9c8ff,#bfa8f5,#d9c8ff)}
+.bow{position:absolute;left:50%;top:-30px;margin-left:-38px;width:76px;height:36px;z-index:3}
+.bow::before,.bow::after{content:'';position:absolute;top:2px;width:36px;height:30px;border:9px solid #bfa8f5;border-radius:50%}
+.bow::before{left:0;transform:rotate(-22deg)}.bow::after{right:0;transform:rotate(22deg)}
+.gift.open .g-lid{transform:translateY(-120px) rotate(-16deg)}
+.strip{position:absolute;bottom:92px;height:12px;width:0;border-radius:8px;background:linear-gradient(#d9c8ff,#bfa8f5);z-index:1;transition:width .7s .25s cubic-bezier(.3,1.4,.5,1)}
+.strip.l{right:50%;transform-origin:100% 50%;transform:rotate(18deg)}
+.strip.r{left:50%;transform-origin:0 50%;transform:rotate(-18deg)}
+.gift.open .strip{width:112px}
+.final{text-align:left;font-size:15.5px;line-height:1.65}
+.final .line+.line{margin-top:9px}
+.final .hd{font-size:20px;font-weight:900;color:var(--pink3);text-align:center}
+.final .em{color:var(--lav3);font-weight:800}
+.final .end{text-align:center;font-weight:900;font-size:18px;color:var(--pink3)}
+
+/* ---------- Keyframes ---------- */
+@keyframes enter{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes wander{0%{transform:translate(-10vw,var(--y0,20vh))}25%{transform:translate(25vw,var(--y1,40vh))}50%{transform:translate(60vw,var(--y2,15vh))}75%{transform:translate(85vw,var(--y3,45vh))}100%{transform:translate(112vw,var(--y0,20vh))}}
+@keyframes flap{to{transform:scaleX(.3)}}
+@keyframes sway{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+@keyframes rise{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:1}100%{transform:translate(var(--dx,0),-118vh) rotate(var(--rot,20deg));opacity:.9}}
+@keyframes bubble{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:.9}100%{transform:translateY(-80px) scale(1.1);opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes magic{0%{transform:scale(.3);opacity:1}100%{transform:scale(40);opacity:0}}
+@keyframes glow{0%{box-shadow:0 0 0 0 #ff9ec7;transform:scale(1.6)}100%{box-shadow:0 0 0 14px #ff9ec700;transform:scale(1)}}
+@keyframes swap{from{opacity:0;transform:translateX(30px) rotate(1.5deg)}to{opacity:1;transform:none}}
+@keyframes flicker{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.88,1.12) rotate(3deg)}}
+@keyframes halo{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9}50%{transform:translate(-50%,-50%) scale(1.12);opacity:.6}}
+@keyframes smoke{0%{opacity:.8;transform:translateY(0) scale(.6)}100%{opacity:0;transform:translateY(-26px) scale(1.8)}}
+@keyframes tick{0%{transform:scale(2.2);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(.9);opacity:.8}}
+@media (prefers-reduced-motion:reduce){#amb .bf{animation-duration:80s}.env,.gift{animation:none}}
+@media (min-width:600px){.problem{font-size:16.5px}}
+</style>
+</head>
+<body>
+
+<!-- Lớp nền: sao lấp lánh, bướm, khu vườn -->
+<div id="amb" aria-hidden="true"></div>
+<div id="garden" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="wipe"></div>
+
+<!-- Thanh điều khiển + tiến trình hành trình -->
+<header id="top">
+  <div class="bar-row">
+    <button class="ibtn" id="backBtn" aria-label="Quay lại màn trước" title="Quay lại">←</button>
+    <button class="ibtn" id="musicBtn" aria-label="Bật hoặc tắt nhạc" title="Bật/tắt nhạc">🎵</button>
+    <input id="vol" type="range" min="0" max="100" aria-label="Âm lượng" title="Âm lượng">
+    <span class="spacer"></span>
+    <button class="ibtn" id="restartBtn" aria-label="Chơi lại từ đầu" title="Chơi lại từ đầu">↻</button>
+  </div>
+  <nav id="prog" aria-label="Hành trình sinh nhật">
+    <div class="track"><i id="progfill"></i></div>
+    <div id="steps"></div>
+  </nav>
+</header>
+
+<main id="stage">
+
+  <!-- ============ MÀN 0: PHONG THƯ ============ -->
+  <section class="screen" id="s0" aria-label="Màn mở đầu">
+    <p id="introTxt" aria-live="polite"></p>
+    <div class="envwrap">
+      <button class="env" id="env" aria-label="Mở phong thư">
+        <span class="back"></span>
+        <span class="letter">💌 For Tinhyeu</span>
+        <span class="pocket"></span>
+        <span class="flap"></span>
+        <span class="seal">💖</span>
+      </button>
+    </div>
+    <p class="tap" id="tapHint">Chạm vào phong thư để mở nhé 💌</p>
+    <div class="greet" id="greet">
+      <p class="line g1" id="g1">Happy 16th Birthday, Tinhyeu! 🎉</p>
+      <p class="line g2" id="g2">Chào mừng bạn đến với khu vườn cổ tích sinh nhật ✨</p>
+      <p class="line g3" id="g3">Hãy vượt qua các thử thách để mở khóa món quà bí mật nhé!</p>
+    </div>
+    <div class="row"><button class="btn pulse" id="startBtn" hidden>Bước vào khu vườn ✨</button></div>
+  </section>
+
+  <!-- ============ MÀN 1: HÓA HỌC ============ -->
+  <section class="screen" id="s1" aria-label="Thử thách Hóa học">
+    <h2 class="title">Magic Chemistry Lab ⚗️</h2>
+    <p class="sub">Giải bài toán phép thuật để mở khóa khu vườn lời chúc!</p>
+    <div class="lab" id="lab" aria-hidden="true">
+      <svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMax meet">
+        <g stroke="#bfa8f5" stroke-width="3" fill="#ffffffaa">
+          <path d="M30 14h30v72a15 15 0 0 1-30 0z"/><path d="M92 14h30v72a15 15 0 0 1-30 0z"/><path d="M178 14h30v72a15 15 0 0 1-30 0z"/>
+        </g>
+        <path d="M32 52h26v34a13 13 0 0 1-26 0z" fill="#bfa8f5"/>
+        <path d="M94 40h26v46a13 13 0 0 1-26 0z" fill="#ff9ec7"/>
+        <path d="M180 60h26v26a13 13 0 0 1-26 0z" fill="#8fd3a6"/>
+        <!-- bình cầu -->
+        <path d="M242 14h22v28l24 50a10 10 0 0 1-9 14h-52a10 10 0 0 1-9-14l24-50z" fill="#ffffffaa" stroke="#bfa8f5" stroke-width="3"/>
+        <path d="M232 84h42l9 18a6 6 0 0 1-5 9h-50a6 6 0 0 1-5-9z" fill="#ffd1e6"/>
+        <g font-weight="900" font-size="13" fill="#7a5bc7" text-anchor="middle">
+          <text x="45" y="124">N₂</text><text x="107" y="124">H₂</text><text x="193" y="124">NH₃</text><text x="253" y="124">⚡</text>
+        </g>
+      </svg>
+    </div>
+    <div class="card" id="chemCard">
+      <span class="badge">Thử thách 1 • Hóa học</span>
+      <p class="problem">
+        Trong phòng thí nghiệm phép thuật, bé phù thủy Tinhyeu nạp <b>20 lít khí N₂</b> và <b>30 lít khí H₂</b> vào một bình kín có xúc tác rồi nung nóng
+        để thực hiện phản ứng: <span class="chem">N₂ + 3H₂ ⇌ 2NH₃</span>.
+        Sau một thời gian, phản ứng đạt trạng thái cân bằng và thể tích hỗn hợp khí trong bình là <b>32 lít</b>
+        (các thể tích khí đo ở cùng nhiệt độ và áp suất).<br><br>
+        Tính: <b>(a)</b> thể tích khí H₂ đã phản ứng (lít); <b>(b)</b> thể tích khí N₂ còn dư (lít).<br>
+        <small>✍️ Bạn có thể nhập kết quả (a), kết quả (b), hoặc viết liền cả hai kết quả theo thứ tự (a)(b).</small>
+      </p>
+      <div class="ask">
+        <input id="chemIn" type="text" inputmode="text" autocomplete="off" placeholder="Nhập đáp án…" aria-label="Đáp án Hóa học">
+        <button class="btn" id="chemBtn">Kiểm tra</button>
+      </div>
+      <div id="chemFb" class="fb" aria-live="polite"></div>
+      <div class="row">
+        <button class="btn ghost sm" id="chemSol" hidden>Xem lời giải 📖</button>
+        <button class="btn alt pulse" id="chemNext" hidden>Đến khu Lời chúc →</button>
+      </div>
+    </div>
+    <div class="card">
+      <span class="badge">🌸 Bảng tuần hoàn pastel</span>
+      <div class="pt" id="pt" role="group" aria-label="Bảng tuần hoàn 36 nguyên tố đầu"></div>
+      <div id="ptinfo">Chạm vào một nguyên tố để làm nó phát sáng ✨</div>
+      <div class="legend">
+        <span><i style="background:#ffd0e4"></i>Kim loại kiềm</span><span><i style="background:#ffe2cc"></i>Kiềm thổ</span>
+        <span><i style="background:#f6e9ff"></i>Chuyển tiếp</span><span><i style="background:#d5f2dd"></i>Phi kim</span>
+        <span><i style="background:#e7d6ff"></i>Halogen</span><span><i style="background:#d9e2ff"></i>Khí hiếm</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN 2: LỜI CHÚC ============ -->
+  <section class="screen" id="s2" aria-label="Lời chúc đa ngôn ngữ">
+    <h2 class="title">Birthday Wishes Around the World 🌍</h2>
+    <p class="sub">15 ngôn ngữ – 15 cái ôm gửi đến Tinhyeu. Bấm “Nghe” để nghe giọng đọc!</p>
+    <div class="chips" id="chips" role="tablist" aria-label="Chọn ngôn ngữ"></div>
+    <div class="card wcard" id="wcard">
+      <div class="flag" id="wFlag"></div>
+      <div class="lname" id="wName"></div>
+      <div class="native" id="wNative" lang=""></div>
+      <div class="vi" id="wVi"></div>
+      <div class="row">
+        <button class="btn" id="wPlay">🔊 Nghe</button>
+        <button class="btn ghost" id="wStop">⏹ Dừng</button>
+      </div>
+      <div class="vstat" id="wStat" aria-live="polite"></div>
+    </div>
+    <div class="navrow">
+      <button class="btn ghost sm" id="wPrev">← Trước</button>
+      <span class="counter" id="wCount"></span>
+      <button class="btn ghost sm" id="wNextCard">Sau →</button>
+    </div>
+    <div class="row"><button class="btn alt" id="wGo">Sang thử thách từ vựng →</button></div>
+  </section>
+
+  <!-- ============ MÀN 3: TỪ VỰNG ============ -->
+  <section class="screen" id="s3" aria-label="Thử thách từ vựng tiếng Anh">
+    <h2 class="title">Unlock the Birthday Cake! 🍰</h2>
+    <p class="sub">Trả lời đúng cả 11 câu để mở khóa bánh sinh nhật.</p>
+    <div class="card" id="quizCard">
+      <div class="cakelock" id="lockTxt">🔒 Bánh kem đang bị khóa</div>
+      <div class="segs" id="segs"></div>
+      <div class="qhead"><span class="qcount" id="qCount"></span><span class="lv" id="qLv"></span></div>
+      <div class="qtext" id="qText"></div>
+      <div class="opts" id="qOpts"></div>
+      <div class="fb" id="qFb" aria-live="polite"></div>
+      <div class="row"><button class="btn mint" id="qNext" hidden>Câu tiếp theo →</button></div>
+    </div>
+    <div class="card center" id="quizDone" hidden>
+      <div style="font-size:56px">🎂🔓</div>
+      <h3 style="color:var(--pink3);font-size:22px;margin:6px 0">Bánh kem đã được mở khóa!</h3>
+      <p>Bạn đã hoàn thành 11/11 câu hỏi. Giỏi quá đi! 🎉</p>
+      <div class="row"><button class="btn pulse" id="quizGo">Đến bánh sinh nhật →</button></div>
+    </div>
+  </section>
+
+  <!-- ============ MÀN 4: THỔI NẾN ============ -->
+  <section class="screen" id="s4" aria-label="Thổi nến">
+    <h2 class="title">Sweet Sixteen Cake 🎂</h2>
+    <p class="sub" id="cakeSub">Chuẩn bị ước một điều ước thật đẹp…</p>
+    <div class="cakewrap"><div class="glowhalo" id="halo"></div><div id="cakeSvg"></div></div>
+    <div id="count" aria-live="polite"></div>
+    <div class="row">
+      <button class="btn" id="blowBtn" disabled>🌬️ Make a Wish &amp; Blow the Candles</button>
+    </div>
+    <div class="row"><button class="btn alt pulse" id="cakeNext" hidden>Mở hộp quà bí mật 🎁</button></div>
+  </section>
+
+  <!-- ============ MÀN 5: HỘP QUÀ ============ -->
+  <section class="screen" id="s5" aria-label="Hộp quà bí mật">
+    <h2 class="title">The Secret Gift 🎁</h2>
+    <p class="sub" id="giftSub">Chạm vào hộp quà để mở nhé!</p>
+    <div class="giftwrap">
+      <button class="gift" id="gift" aria-label="Mở hộp quà bí mật">
+        <span class="strip l"></span><span class="strip r"></span>
+        <span class="g-lid"><span class="bow"></span></span>
+        <span class="g-box"></span>
+      </button>
+    </div>
+    <div class="card final" id="final" hidden>
+      <p class="line hd">Gửi Tinhyeu 16 tuổi 💖</p>
+      <p class="line">Chúc bạn tuổi mới luôn là một <span class="em">phản ứng tỏa nhiệt</span>: càng gặp nhiều niềm vui, năng lượng hạnh phúc càng được giải phóng (ΔH &lt; 0, còn chuyện buồn thì “thu” ít thôi nhé!). 🔥</p>
+      <p class="line">Mong những <span class="em">liên kết</span> giữa bạn với gia đình và bạn bè thật bền chặt như liên kết cộng hóa trị: chia sẻ electron, chia sẻ cả tiếng cười – không ai bị tách ra cả. 🤝</p>
+      <p class="line">Tuổi 16 trùng với số hiệu nguyên tử của <span class="em">lưu huỳnh (S)</span> trong bảng tuần hoàn – vậy hãy tỏa sáng và cháy hết mình với ngọn lửa xanh nhé! 💙</p>
+      <p class="line">Chúc bạn có đủ <span class="em">6,02 × 10²³</span> điều tốt đẹp – tròn một mol hạnh phúc – và nhớ là luôn “dư”, đừng bao giờ làm chất hạn chế! 🌸</p>
+      <p class="line">Chúc bạn cân bằng mọi phương trình dễ như… cân bằng số bánh kem đã ăn hôm nay. 🍰😆</p>
+      <p class="line end">Happy 16th Birthday, Tinhyeu! 🎂✨</p>
+    </div>
+    <div class="row"><button class="btn ghost" id="replayBtn" hidden>↻ Chơi lại từ đầu</button></div>
+  </section>
+
+</main>
+
+<!-- Hộp thoại & thông báo tự thiết kế (không dùng alert) -->
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="mbox">
+    <div class="mic" id="mIcon">✨</div>
+    <h3 id="mTitle"></h3>
+    <div class="mtxt" id="mText"></div>
+    <div class="mbtns" id="mBtns"></div>
+  </div>
+</div>
+<div id="toast" role="status"></div>
+<noscript><p style="text-align:center;padding:30px">Trang này cần bật JavaScript để chơi nhé 🌸</p></noscript>
+
+<script>
+(() => {
+'use strict';
+
+/* =========================================================
+   0. TIỆN ÍCH
+   ========================================================= */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const rnd = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[Math.floor(Math.random() * a.length)];
+function shuffle(arr){ const a = arr.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+/* =========================================================
+   1. TRẠNG THÁI (lưu trong phiên chơi – sessionStorage)
+   ========================================================= */
+const KEY = 'tinhyeu-bday-v1';
+const DEF = { cur:0, max:0, opened:false, chem:false, vocab:{order:null, idx:0, done:false}, cake:false, music:true, vol:0.7 };
+let S = loadState();
+function loadState(){
+  try{ const j = JSON.parse(sessionStorage.getItem(KEY)); if (j && typeof j === 'object') return Object.assign(JSON.parse(JSON.stringify(DEF)), j); }catch(e){}
+  return JSON.parse(JSON.stringify(DEF));
+}
+function save(){ try{ sessionStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+S.max = Math.max(0, Math.min(5, S.max|0)); S.cur = Math.max(0, Math.min(S.max, S.cur|0));
+
+/* =========================================================
+   2. HÌNH MINH HỌA SVG (tạo bằng code)
+   ========================================================= */
+const flowerSVG = (p='#ff9ec7', c='#ffe28a') =>
+  `<svg viewBox="-20 -20 40 40" width="100%" height="100%">${[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-9" rx="5.5" ry="9" fill="${p}" transform="rotate(${a})"/>`).join('')}<circle r="5" fill="${c}"/></svg>`;
+const butterflySVG = (a='#ff9ec7', b='#bfa8f5') =>
+  `<svg viewBox="0 0 60 50" width="100%" height="100%"><g class="wing wl"><path d="M30 25C10 0 0 10 6 26C10 38 22 36 30 28Z" fill="${a}"/><path d="M30 28C14 30 12 46 22 46C28 46 30 36 30 28Z" fill="${b}"/></g><g class="wing wr"><path d="M30 25C50 0 60 10 54 26C50 38 38 36 30 28Z" fill="${a}"/><path d="M30 28C46 30 48 46 38 46C32 46 30 36 30 28Z" fill="${b}"/></g><rect x="29" y="15" width="2" height="26" rx="1" fill="#6b4f8f"/></svg>`;
+const heartSVG = (c='#ff7fb5') => `<svg viewBox="0 0 32 29" width="100%" height="100%"><path d="M16 27C2 17 0 9 4 4C8-1 14 1 16 6C18 1 24-1 28 4C32 9 30 17 16 27Z" fill="${c}"/></svg>`;
+const balloonSVG = (c='#ff9ec7') => `<svg viewBox="0 0 30 48" width="100%" height="100%"><ellipse cx="15" cy="16" rx="12" ry="15" fill="${c}"/><path d="M15 31l-3 5h6z" fill="${c}"/><path d="M15 36q-5 6 0 12" stroke="#b9a2f0" fill="none" stroke-width="1.5"/><ellipse cx="10" cy="10" rx="3" ry="5" fill="#fff" opacity=".45" transform="rotate(20 10 10)"/></svg>`;
+const starSVG = (c='#ffe28a') => `<svg viewBox="-12 -12 24 24" width="100%" height="100%"><path d="M0-11L3 -3L11 -3L5 2L7 10L0 5L-7 10L-5 2L-11 -3L-3 -3Z" fill="${c}"/></svg>`;
+const mushroomSVG = (cap='#ff9ec7') => `<svg viewBox="0 0 40 44" width="100%" height="100%"><rect x="15" y="20" width="10" height="20" rx="4" fill="#fff4e6"/><path d="M3 24Q20-8 37 24Z" fill="${cap}"/><circle cx="14" cy="15" r="3" fill="#fff"/><circle cx="25" cy="11" r="2.5" fill="#fff"/><circle cx="29" cy="19" r="2" fill="#fff"/></svg>`;
+
+/* ---------- Nền: sao, bướm, vườn hoa ---------- */
+(function buildAmbient(){
+  const amb = $('#amb');
+  for (let i = 0; i < 16; i++){
+    const s = document.createElement('span'); s.className = 'star'; s.textContent = pick(['✦','✧','✨']);
+    s.style.left = rnd(2,96) + 'vw'; s.style.top = rnd(8,92) + 'vh'; s.style.fontSize = rnd(10,20) + 'px';
+    s.style.animationDelay = rnd(0,3) + 's'; s.style.animationDuration = rnd(2.5,5) + 's'; amb.appendChild(s);
+  }
+  const cols = [['#ff9ec7','#bfa8f5'],['#bfa8f5','#ffd9ea'],['#8fd3a6','#ffe28a'],['#ffc4a3','#ff9ec7']];
+  for (let i = 0; i < 5; i++){
+    const b = document.createElement('div'); b.className = 'bf'; const c = cols[i % cols.length];
+    b.innerHTML = butterflySVG(c[0], c[1]);
+    b.style.setProperty('--d', rnd(26,44) + 's'); b.style.animationDelay = (-rnd(0,40)) + 's';
+    ['y0','y1','y2','y3'].forEach(k => b.style.setProperty('--' + k, rnd(8,70) + 'vh'));
+    b.style.width = rnd(28,46) + 'px'; amb.appendChild(b);
+  }
+  // Vườn cổ tích ở đáy màn hình
+  const flowers = [[30,'#ff9ec7'],[110,'#bfa8f5'],[190,'#ffd9ea'],[270,'#ff9ec7'],[370,'#bfa8f5'],[450,'#ffc4a3'],[560,'#ff9ec7']];
+  let g = `<svg viewBox="0 0 600 86" preserveAspectRatio="xMidYMax slice"><path d="M0 70Q40 58 80 68T160 66T240 70T320 64T400 70T480 64T560 68L600 66V86H0Z" fill="#cfeed8"/><path d="M0 78Q60 68 120 76T240 74T360 78T480 72T600 76V86H0Z" fill="#b6e3c4"/>`;
+  flowers.forEach(([x,c],i) => {
+    const h = 26 + (i*7)%16;
+    g += `<g class="sway" style="animation-delay:${(i*.4).toFixed(1)}s"><path d="M${x} 80V${80-h}" stroke="#7fc79a" stroke-width="2.5" fill="none"/><g transform="translate(${x} ${80-h})">${[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-5" rx="3.4" ry="5.4" fill="${c}" transform="rotate(${a})"/>`).join('')}<circle r="3" fill="#ffe28a"/></g></g>`;
+  });
+  [[70,'#ff9ec7'],[330,'#bfa8f5'],[520,'#ff9ec7']].forEach(([x,c]) => {
+    g += `<g transform="translate(${x} 52) scale(.62)"><rect x="15" y="20" width="10" height="20" rx="4" fill="#fff4e6"/><path d="M3 24Q20-8 37 24Z" fill="${c}"/><circle cx="14" cy="15" r="3" fill="#fff"/><circle cx="25" cy="11" r="2.5" fill="#fff"/></g>`;
+  });
+  $('#garden').innerHTML = g + '</svg>';
+})();
+
+/* =========================================================
+   3. ÂM THANH – Web Audio API (không cần file MP3)
+   ========================================================= */
+const A = { ctx:null, master:null, music:null, sfxBus:null, playing:false, timer:0, song:null };
+const N = m => 440 * Math.pow(2, (m - 69) / 12);       // số MIDI → Hz
+function ensureAudio(){
+  try{
+    if (!A.ctx){
+      const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+      A.ctx = new C();
+      A.master = A.ctx.createGain(); A.master.gain.value = S.vol; A.master.connect(A.ctx.destination);
+      A.music = A.ctx.createGain(); A.music.gain.value = .3; A.music.connect(A.master);
+      A.sfxBus = A.ctx.createGain(); A.sfxBus.gain.value = .9; A.sfxBus.connect(A.master);
+    }
+    if (A.ctx.state === 'suspended') A.ctx.resume();
+    if (S.opened && S.music) startMusic();               // chỉ phát sau tương tác đầu tiên
+  }catch(e){}
+}
+function tone(f, t, d, type, vol, dest){
+  const c = A.ctx, o = c.createOscillator(), g = c.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  o.connect(g); g.connect(dest); o.start(t); o.stop(t + d + .05);
+}
+function noise(t, d, f0, f1, vol){
+  const c = A.ctx, len = Math.floor(c.sampleRate * d), buf = c.createBuffer(1, len, c.sampleRate), data = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+  const s = c.createBufferSource(); s.buffer = buf;
+  const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.setValueAtTime(f0, t); bp.frequency.exponentialRampToValueAtTime(f1, t + d); bp.Q.value = .8;
+  const g = c.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + d * .25); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  s.connect(bp); bp.connect(g); g.connect(A.sfxBus); s.start(t); s.stop(t + d + .05);
+}
+/* Nhạc sinh nhật vui nhộn (giai điệu "Happy Birthday" nhịp 3/4, có bass & hợp âm), lặp lại với quãng nghỉ dài */
+const MELODY = [[60,.75],[60,.25],[62,1],[60,1],[65,1],[64,2], [60,.75],[60,.25],[62,1],[60,1],[67,1],[65,2],
+                [60,.75],[60,.25],[72,1],[69,1],[65,1],[64,1],[62,1], [70,.75],[70,.25],[69,1],[65,1],[67,1],[65,2]];
+const BASS = [48,43,43,48,48,53,53,48];
+const CHORD = {48:[55,60,64], 43:[55,59,62], 53:[53,57,60]};
+function startMusic(){ if (!A.ctx || !S.music || A.playing) return; A.playing = true; playSong(); }
+function playSong(){
+  if (!A.playing || !S.music || !A.ctx) return;
+  const c = A.ctx, B = .4, t0 = c.currentTime + .1, sg = c.createGain(); sg.gain.value = 1; sg.connect(A.music); A.song = sg;
+  let t = t0;
+  MELODY.forEach(([m, d]) => { tone(N(m), t, d * B * .95, 'triangle', .5, sg); tone(N(m + 12), t, d * B * .8, 'sine', .1, sg); t += d * B; });
+  BASS.forEach((b, i) => {
+    const bt = t0 + i * 3 * B;
+    tone(N(b), bt, B * .9, 'sine', .55, sg);
+    [1,2].forEach(k => CHORD[b].forEach(n => tone(N(n), bt + k * B, B * .45, 'square', .035, sg)));
+  });
+  [84,88,91,96].forEach((m, i) => tone(N(m), t + i * .1, .3, 'sine', .12, sg));      // lấp lánh cuối câu
+  A.timer = setTimeout(playSong, (24 * B + 5.5) * 1000);                                // nghỉ ~5 giây rồi lặp
+}
+function stopMusic(){
+  A.playing = false; clearTimeout(A.timer);
+  if (A.song && A.ctx){ A.song.gain.setTargetAtTime(0, A.ctx.currentTime, .05); A.song = null; }
+}
+function duck(on){ if (A.ctx) A.music.gain.setTargetAtTime(on ? .06 : .3, A.ctx.currentTime, .1); }   // hạ nhạc khi đang đọc lời chúc
+function sfx(name){
+  const c = A.ctx; if (!c || S.vol === 0) return;
+  const t = c.currentTime + .01, d = A.sfxBus;
+  switch (name){
+    case 'click':  tone(N(84), t, .08, 'sine', .25, d); break;
+    case 'tick':   tone(N(79), t, .14, 'triangle', .35, d); break;
+    case 'pop':    tone(N(88), t, .07, 'triangle', .3, d); tone(N(95), t + .05, .08, 'sine', .2, d); break;
+    case 'open':   [72,76,79,84,88].forEach((m, i) => tone(N(m), t + i * .09, .4, 'triangle', .35, d)); break;
+    case 'ok':     tone(N(76), t, .16, 'triangle', .4, d); tone(N(83), t + .1, .32, 'triangle', .4, d); break;
+    case 'no':     tone(N(57), t, .22, 'triangle', .3, d); tone(N(53), t + .14, .3, 'triangle', .3, d); break;
+    case 'unlock': [72,76,79,84,79,84,88,91].forEach((m, i) => { tone(N(m), t + i * .1, .45, 'triangle', .35, d); tone(N(m + 12), t + i * .1, .3, 'sine', .1, d); }); break;
+    case 'blow':   noise(t, .9, 900, 250, .5); break;
+    case 'candle': tone(N(rnd(80,92) | 0), t, .06, 'sine', .22, d); break;
+    case 'gift':   noise(t, .5, 600, 3000, .3); [84,88,91,96,100,103].forEach((m, i) => tone(N(m), t + .15 + i * .08, .5, 'sine', .28, d)); tone(N(48), t, .5, 'sine', .5, d); break;
+  }
+}
+
+/* =========================================================
+   4. HIỆU ỨNG: canvas pháo giấy, bóng bay, trái tim...
+   ========================================================= */
+const cv = $('#fx'), cx = cv.getContext('2d'); let W = 0, H = 0, raf = 0; const parts = [];
+function resize(){ const dpr = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr,0,0,dpr,0,0); }
+resize(); addEventListener('resize', resize);
+const CCOL = ['#ff9ec7','#ffd6e8','#bfa8f5','#e9defe','#8fd3a6','#fff3b0','#ffffff','#ffc4a3'];
+function addPart(o){ parts.push(Object.assign({ r:rnd(0,6.28), vr:rnd(-.25,.25), s:rnd(6,12), c:pick(CCOL), sh:pick(['rect','circle','heart','star']), age:0 }, o)); }
+function burst(x, y, n = 70, o = {}){
+  for (let i = 0; i < n; i++){ const a = rnd(0, 6.283), sp = rnd(o.min || 3, o.max || 11);
+    addPart({ x, y, vx:Math.cos(a) * sp, vy:Math.sin(a) * sp - (o.up || 4), g:.28, life:rnd(70,130) }); }
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+function rain(n = 90){ for (let i = 0; i < n; i++) addPart({ x:rnd(0,W), y:rnd(-H*.5,-10), vx:rnd(-1.5,1.5), vy:rnd(2,5), g:.05, life:rnd(170,260) }); if (!raf) raf = requestAnimationFrame(tick); }
+function tick(){
+  cx.clearRect(0, 0, W, H);
+  for (let i = parts.length - 1; i >= 0; i--){
+    const p = parts[i]; p.age++; p.vx *= .992; p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    const al = 1 - p.age / p.life; if (al <= 0 || p.y > H + 30){ parts.splice(i, 1); continue; }
+    cx.save(); cx.globalAlpha = al; cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; const s = p.s;
+    if (p.sh === 'rect') cx.fillRect(-s/2, -s/3, s, s * .66);
+    else if (p.sh === 'circle'){ cx.beginPath(); cx.arc(0, 0, s/2.4, 0, 6.283); cx.fill(); }
+    else if (p.sh === 'heart'){ cx.beginPath(); cx.moveTo(0, s*.35); cx.bezierCurveTo(-s*.9,-s*.2,-s*.4,-s*.8,0,-s*.3); cx.bezierCurveTo(s*.4,-s*.8,s*.9,-s*.2,0,s*.35); cx.fill(); }
+    else { cx.beginPath(); for (let k = 0; k < 10; k++){ const rr = k % 2 ? s*.25 : s*.6, a = k * Math.PI / 5; cx.lineTo(Math.sin(a) * rr, -Math.cos(a) * rr); } cx.closePath(); cx.fill(); }
+    cx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(tick) : 0;
+  if (!parts.length) cx.clearRect(0, 0, W, H);
+}
+function floaters(kind, n, opt = {}){
+  for (let i = 0; i < n; i++) setTimeout(() => {
+    const el = document.createElement('div'); el.className = 'fl'; const s = rnd(opt.min || 26, opt.max || 46);
+    el.style.left = rnd(2, 92) + 'vw'; el.style.width = s + 'px'; el.style.height = s + 'px';
+    el.style.setProperty('--d', rnd(4.5, 8) + 's'); el.style.setProperty('--dx', rnd(-70, 70) + 'px'); el.style.setProperty('--rot', rnd(-30, 30) + 'deg');
+    el.innerHTML = kind(); document.body.appendChild(el); setTimeout(() => el.remove(), 9000);
+  }, i * (opt.gap || 110));
+}
+const hearts   = n => floaters(() => heartSVG(pick(['#ff7fb5','#ff9ec7','#ffb8d9','#bfa8f5'])), n, { min:20, max:38 });
+const balloons = n => floaters(() => balloonSVG(pick(['#ff9ec7','#bfa8f5','#8fd3a6','#ffd1a3','#ffb8d9'])), n, { min:34, max:54, gap:160 });
+const sparkles = n => floaters(() => starSVG(pick(['#ffe28a','#fff','#ffd1e6'])), n, { min:14, max:26, gap:60 });
+const garden   = n => floaters(() => Math.random() < .5 ? flowerSVG(pick(['#ff9ec7','#bfa8f5','#ffc4a3'])) : butterflySVG(...pick([['#ff9ec7','#bfa8f5'],['#8fd3a6','#ffe28a'],['#bfa8f5','#ffd9ea']])), n, { min:30, max:48, gap:140 });
+function centerOf(el){ const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }
+function magicFlash(){ const m = document.createElement('div'); m.className = 'magic'; document.body.appendChild(m); setTimeout(() => m.remove(), 1300); }
+
+/* =========================================================
+   5. HỘP THOẠI & THÔNG BÁO TỰ THIẾT KẾ
+   ========================================================= */
+const modalEl = $('#modal');
+function modal({ icon = '✨', title = '', html = '', center = true, buttons = [{ label:'OK' }] }){
+  return new Promise(res => {
+    $('#mIcon').textContent = icon; $('#mTitle').textContent = title;
+    const t = $('#mText'); t.innerHTML = html; t.className = 'mtxt' + (center ? ' c' : '');
+    const b = $('#mBtns'); b.innerHTML = '';
+    buttons.forEach((bt, i) => { const el = document.createElement('button'); el.className = 'btn ' + (bt.cls || ''); el.textContent = bt.label;
+      el.onclick = () => { modalEl.classList.remove('show'); sfx('click'); res(i); }; b.appendChild(el); });
+    modalEl.classList.add('show'); setTimeout(() => { const f = b.querySelector('button'); if (f) f.focus(); }, 60);
+  });
+}
+let toastT = 0;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+
+/* =========================================================
+   6. ĐIỀU HƯỚNG MÀN HÌNH & THANH TIẾN TRÌNH
+   ========================================================= */
+const screens = $$('.screen'), wipe = $('#wipe');
+const STEPS = [['✉️','Thư'],['⚗️','Hóa học'],['🌍','Lời chúc'],['📚','Từ vựng'],['🎂','Thổi nến'],['🎁','Quà']];
+let navBusy = false, autoT = 0;
+function renderProg(){
+  const box = $('#steps'); box.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'step' + (i === S.cur ? ' cur' : '') + (i < S.max && i !== S.cur ? ' done' : '') + (i > S.max ? ' locked' : '');
+    b.textContent = i < S.max && i !== S.cur ? '✔' : s[0]; b.disabled = i > S.max;
+    b.setAttribute('aria-label', s[1] + (i > S.max ? ' (chưa mở khóa)' : '')); b.onclick = () => go(i); box.appendChild(b);
+  });
+  $('#progfill').style.width = (S.cur / 5 * 100) + '%';
+  $('#backBtn').disabled = S.cur === 0;
+}
+function show(n){
+  screens.forEach((s, i) => s.classList.toggle('active', i === n));
+  S.cur = n; save(); renderProg(); window.scrollTo(0, 0); onEnter(n);
+}
+function go(n){
+  if (n < 0 || n > 5 || n > S.max || n === S.cur || navBusy) return;
+  navBusy = true; clearTimeout(autoT); stopSpeech(); sfx('click'); wipe.classList.add('on');
+  setTimeout(() => { show(n); wipe.classList.remove('on'); setTimeout(() => navBusy = false, 300); }, 390);
+}
+function unlock(n){ if (n > S.max){ S.max = n; save(); renderProg(); } }
+function onEnter(n){
+  if (n === 0) initIntro();
+  if (n === 1) initChem();
+  if (n === 2) initWishes();
+  if (n === 3) renderQuiz();
+  if (n === 4) startCountdown();
+  if (n === 5) initGift();
+}
+
+/* =========================================================
+   7. MÀN 0 – PHONG THƯ
+   ========================================================= */
+const INTRO = 'A little birthday surprise for Tinhyeu...';
+let introTyped = false;
+function initIntro(){
+  const el = $('#introTxt');
+  if (S.opened){
+    el.textContent = INTRO; el.classList.add('done');
+    $('#env').classList.add('open'); $('#tapHint').hidden = true;
+    ['g1','g2','g3'].forEach(id => $('#' + id).classList.add('show')); $('#startBtn').hidden = false; $('#startBtn').classList.remove('pulse'); return;
+  }
+  if (introTyped) return; introTyped = true;
+  let i = 0; (function typeNext(){ el.textContent = INTRO.slice(0, ++i); if (i < INTRO.length) setTimeout(typeNext, 55); else el.classList.add('done'); })();
+}
+async function openEnvelope(){
+  if (S.opened) return;
+  ensureAudio(); S.opened = true; save();
+  const env = $('#env'); env.classList.add('open'); $('#tapHint').hidden = true;
+  sfx('open'); startMusic(); hearts(16); sparkles(14);
+  const [x, y] = centerOf(env); burst(x, y, 60, { up:6 });
+  unlock(1);
+  for (const id of ['g1','g2','g3']){ await sleep(700); $('#' + id).classList.add('show'); sfx('pop'); }
+  await sleep(500); $('#startBtn').hidden = false;
+  autoT = setTimeout(() => { if (S.cur === 0) go(1); }, 7000);        // tự chuyển sau khi thư đã mở (vẫn có nút bấm ngay)
+}
+$('#env').addEventListener('click', openEnvelope);
+$('#startBtn').addEventListener('click', () => go(1));
+
+/* =========================================================
+   8. MÀN 1 – THỬ THÁCH HÓA HỌC
+   Đề: 20 L N2 + 30 L H2 → sau phản ứng còn 32 L.
+   N2 + 3H2 ⇌ 2NH3. Thể tích giảm = 2x (x = V N2 phản ứng).
+   50 − 32 = 18 = 2x → x = 9 → H2 phản ứng = 27 L; N2 dư = 20 − 9 = 11 L.
+   Kiểm tra: N2 dư 11 + H2 dư 3 + NH3 18 = 32 ✔
+   ========================================================= */
+const CHEM = { answers:['27','11','2711'], hints:[
+  'Gợi ý 1/4: Viết phương trình N₂ + 3H₂ ⇌ 2NH₃. Ở cùng nhiệt độ và áp suất, tỉ lệ thể tích các khí cũng chính là tỉ lệ số mol (tỉ lệ hệ số).',
+  'Gợi ý 2/4: Cứ 1 thể tích N₂ phản ứng với 3 thể tích H₂ (tổng 4 thể tích) thì tạo 2 thể tích NH₃. Vậy mỗi lần như thế, tổng thể tích khí giảm đi bao nhiêu?',
+  'Gợi ý 3/4: Tổng thể tích ban đầu là 20 + 30 = 50 lít, sau phản ứng còn 32 lít. Độ giảm thể tích là bao nhiêu? Hãy dùng nó để tìm thể tích N₂ đã phản ứng.',
+  'Gợi ý 4/4: Gọi x là thể tích N₂ đã phản ứng thì thể tích giảm = 2x. Có x rồi, dùng tỉ lệ 1 : 3 để tính H₂ đã phản ứng, và lấy 20 − x để tìm N₂ còn dư.' ],
+  extra:{ '18':'💡 18 là độ giảm thể tích (cũng là thể tích NH₃ tạo thành) – đó mới là bước trung gian thôi.',
+          '9':'💡 9 lít là thể tích N₂ đã phản ứng – đề yêu cầu H₂ đã phản ứng và N₂ còn dư.',
+          '3':'💡 3 lít là H₂ còn dư – đề hỏi H₂ đã phản ứng.', '32':'💡 32 lít là tổng thể tích sau phản ứng, đã cho trong đề.', '50':'💡 50 lít là tổng thể tích ban đầu.' },
+  solution:'Gọi x (lít) là thể tích N₂ đã phản ứng.<br>N₂ + 3H₂ → 2NH₃: x lít N₂ + 3x lít H₂ → 2x lít NH₃.<br>Thể tích giảm = (x + 3x) − 2x = 2x = (20 + 30) − 32 = 18 → x = 9.<br><b>(a)</b> V(H₂) phản ứng = 3x = <b>27 lít</b>.<br><b>(b)</b> V(N₂) dư = 20 − 9 = <b>11 lít</b>.<br>Kiểm tra: N₂ dư 11 + H₂ dư (30 − 27 = 3) + NH₃ 18 = 32 lít ✔.' };
+let chemTries = 0, chemInit = false;
+function initChem(){
+  if (!chemInit){
+    chemInit = true;
+    const lab = $('#lab');
+    for (let i = 0; i < 14; i++){ const b = document.createElement('i'); b.className = 'bub'; const s = rnd(5,12);
+      b.style.cssText = `left:${[10,20,32,40,58,66,72,80,88,15,48,62,35,76][i]}%;width:${s}px;height:${s}px;--d:${rnd(2.2,4)}s;animation-delay:${rnd(0,3)}s`; lab.appendChild(b); }
+    buildPT();
+  }
+  if (S.chem) chemSolvedUI();
+}
+function chemSolvedUI(){
+  $('#chemIn').disabled = true; $('#chemBtn').disabled = true; $('#chemSol').hidden = true; $('#chemNext').hidden = false;
+  const f = $('#chemFb'); f.className = 'fb good'; f.textContent = '✅ Chính xác! Bạn đã mở khóa khu vườn lời chúc.';
+}
+function checkChem(){
+  const raw = $('#chemIn').value.trim(), f = $('#chemFb');
+  if (!raw){ toast('Hãy nhập đáp án trước nhé 🌸'); return; }
+  const tok = raw.split(/[\s,;]+/).filter(Boolean);
+  let ok = false;
+  if (tok.length === 1) ok = CHEM.answers.includes(tok[0]);
+  else if (tok.length === 2) ok = tok[0] === '27' && tok[1] === '11';
+  if (ok){
+    S.chem = true; unlock(2); save(); sfx('unlock'); magicFlash(); burst(innerWidth / 2, innerHeight * .4, 110, { up:8 }); rain(60); sparkles(12);
+    chemSolvedUI();
+    modal({ icon:'🧪✨', title:'Mở khóa thành công!', html:'Phép thuật Hóa học đã hoạt động! Cánh cổng đến khu vườn <b>lời chúc đa ngôn ngữ</b> đã mở.',
+      buttons:[{ label:'Đến lời chúc →', cls:'alt' }, { label:'Ở lại xem thêm', cls:'ghost' }] }).then(i => { if (i === 0) go(2); });
+    return;
+  }
+  const hasNum = /\d/.test(raw);
+  chemTries++; sfx('no'); $('#chemCard').classList.remove('shake'); void $('#chemCard').offsetWidth; $('#chemCard').classList.add('shake');
+  const h = CHEM.hints[Math.min(chemTries - 1, CHEM.hints.length - 1)];
+  const ex = CHEM.extra[tok.join('')] ? '<br>' + CHEM.extra[tok.join('')] : '';
+  f.className = 'fb bad'; f.innerHTML = (hasNum ? '❌ Chưa đúng rồi, thử lại nhé!' : '❌ Hãy nhập bằng chữ số nhé!') + '<br>' + h + ex;
+  if (chemTries >= 5) $('#chemSol').hidden = false;
+}
+$('#chemBtn').addEventListener('click', checkChem);
+$('#chemIn').addEventListener('keydown', e => { if (e.key === 'Enter') checkChem(); });
+$('#chemSol').addEventListener('click', () => modal({ icon:'📖', title:'Lời giải chi tiết', html:CHEM.solution, center:false, buttons:[{ label:'Đã hiểu, để mình nhập lại' }] }));
+$('#chemNext').addEventListener('click', () => go(2));
+
+/* ---------- Bảng tuần hoàn pastel (36 nguyên tố đầu) ---------- */
+const EL = [['H','Hiđro',1.008],['He','Heli',4.003],['Li','Liti',6.94],['Be','Beri',9.012],['B','Bo',10.81],['C','Cacbon',12.011],['N','Nitơ',14.007],['O','Oxi',15.999],['F','Flo',18.998],['Ne','Neon',20.18],
+ ['Na','Natri',22.99],['Mg','Magie',24.305],['Al','Nhôm',26.98],['Si','Silic',28.086],['P','Photpho',30.974],['S','Lưu huỳnh',32.06],['Cl','Clo',35.45],['Ar','Agon',39.948],
+ ['K','Kali',39.098],['Ca','Canxi',40.078],['Sc','Scanđi',44.956],['Ti','Titan',47.867],['V','Vanađi',50.942],['Cr','Crom',51.996],['Mn','Mangan',54.938],['Fe','Sắt',55.845],['Co','Coban',58.933],['Ni','Niken',58.693],
+ ['Cu','Đồng',63.546],['Zn','Kẽm',65.38],['Ga','Gali',69.723],['Ge','Gecmani',72.63],['As','Asen',74.922],['Se','Selen',78.971],['Br','Brom',79.904],['Kr','Kripton',83.798]];
+function ptPos(z){ if (z === 1) return [1,1]; if (z === 2) return [1,18]; if (z <= 10) return [2, z <= 4 ? z - 2 : z + 8]; if (z <= 18) return [3, z <= 12 ? z - 10 : z]; return [4, z - 18]; }
+function ptCat(z){ if ([2,10,18,36].includes(z)) return 'ng'; if ([9,17,35].includes(z)) return 'hl'; if ([3,11,19].includes(z)) return 'ak'; if ([4,12,20].includes(z)) return 'ae';
+  if ([5,14,32,33].includes(z)) return 'md'; if ([13,31].includes(z)) return 'pm'; if (z >= 21 && z <= 30) return 'tm'; return 'nm'; }
+function buildPT(){
+  const box = $('#pt');
+  EL.forEach((e, i) => { const z = i + 1, [r, c] = ptPos(z), b = document.createElement('button');
+    b.className = ptCat(z); b.style.gridRow = r; b.style.gridColumn = c; b.textContent = e[0]; b.setAttribute('aria-label', `${e[1]}, số hiệu ${z}`);
+    b.onclick = () => { $$('.glow', box).forEach(x => x.classList.remove('glow')); void b.offsetWidth; b.classList.add('glow'); sfx('pop');
+      $('#ptinfo').innerHTML = `<b style="color:var(--pink3)">${e[0]}</b> – ${e[1]} • Z = ${z} • M ≈ ${String(e[2]).replace('.', ',')}`;
+      const [x, y] = centerOf(b); burst(x, y, 10, { min:1, max:4, up:1 }); };
+    box.appendChild(b); });
+}
+
+/* =========================================================
+   9. MÀN 2 – LỜI CHÚC 15 NGÔN NGỮ + Web Speech API
+   ========================================================= */
+const WISHES = [
+ { flag:'🇬🇧', vi:'Tiếng Anh', nat:'English', code:'en-US', text:'Happy 16th birthday, Tinhyeu! May your year be as sweet as cake and as bright as sparkles.', tr:'Chúc mừng sinh nhật lần thứ 16, Tinhyeu! Mong năm mới của bạn ngọt ngào như bánh kem và rực rỡ như những ánh lấp lánh.' },
+ { flag:'🇫🇷', vi:'Tiếng Pháp', nat:'Français', code:'fr-FR', text:'Joyeux anniversaire pour tes seize ans, Tinhyeu ! Que cette année soit pleine de rires, de douceur et de belles surprises.', tr:'Chúc mừng sinh nhật tuổi 16 của bạn, Tinhyeu! Mong năm nay tràn đầy tiếng cười, sự dịu ngọt và những bất ngờ đẹp.' },
+ { flag:'🇷🇺', vi:'Tiếng Nga', nat:'Русский', code:'ru-RU', text:'С днём рождения, Tinhyeu! Тебе исполнилось 16 лет — пусть этот год будет полон радости, смеха и приятных сюрпризов!', tr:'Chúc mừng sinh nhật, Tinhyeu! Bạn tròn 16 tuổi rồi – mong năm nay tràn ngập niềm vui, tiếng cười và những điều bất ngờ dễ thương!' },
+ { flag:'🇩🇪', vi:'Tiếng Đức', nat:'Deutsch', code:'de-DE', text:'Alles Gute zum 16. Geburtstag, Tinhyeu! Ich wünsche dir ein Jahr voller Lachen, Glück und süßer Überraschungen.', tr:'Chúc mừng sinh nhật lần thứ 16, Tinhyeu! Mình chúc bạn một năm đầy tiếng cười, hạnh phúc và những bất ngờ ngọt ngào.' },
+ { flag:'🇪🇸', vi:'Tiếng Tây Ban Nha', nat:'Español', code:'es-ES', text:'¡Feliz cumpleaños número 16, Tinhyeu! Que este año esté lleno de risas, dulces sorpresas y sueños hechos realidad.', tr:'Chúc mừng sinh nhật tuổi 16, Tinhyeu! Mong năm nay đầy tiếng cười, những bất ngờ ngọt ngào và ước mơ thành hiện thực.' },
+ { flag:'🇸🇪', vi:'Tiếng Thụy Điển', nat:'Svenska', code:'sv-SE', text:'Grattis på 16-årsdagen, Tinhyeu! Jag hoppas att du får ett år fullt av skratt, sötma och roliga överraskningar.', tr:'Chúc mừng sinh nhật 16 tuổi, Tinhyeu! Mình hy vọng bạn có một năm đầy tiếng cười, vị ngọt và những bất ngờ vui vẻ.' },
+ { flag:'🇨🇳', vi:'Tiếng Trung', nat:'中文', code:'zh-CN', text:'Tinhyeu，十六岁生日快乐！愿你的新一岁像蛋糕一样甜，像星星一样闪闪发光！', tr:'Tinhyeu, chúc mừng sinh nhật 16 tuổi! Mong tuổi mới của bạn ngọt như bánh kem và lấp lánh như những vì sao!', pron:'Tinhyeu, shíliù suì shēngrì kuàilè! Yuàn nǐ de xīn yí suì xiàng dàngāo yīyàng tián, xiàng xīngxing yīyàng shǎnshǎn fāguāng!' },
+ { flag:'🇰🇷', vi:'Tiếng Hàn', nat:'한국어', code:'ko-KR', text:'Tinhyeu, 열여섯 번째 생일 축하해! 올 한 해도 웃음과 행복이 가득하길 바라.', tr:'Tinhyeu, chúc mừng sinh nhật lần thứ 16! Mong cả năm nay đầy ắp tiếng cười và hạnh phúc.' },
+ { flag:'🇯🇵', vi:'Tiếng Nhật', nat:'日本語', code:'ja-JP', text:'Tinhyeuさん、16歳のお誕生日おめでとう！素敵な一年になりますように。', tr:'Chúc mừng sinh nhật tuổi 16, bạn Tinhyeu! Mong đây sẽ là một năm thật tuyệt vời.' },
+ { flag:'🇮🇩', vi:'Tiếng Indonesia', nat:'Bahasa Indonesia', code:'id-ID', text:'Selamat ulang tahun yang ke-16, Tinhyeu! Semoga harimu manis seperti kue dan tahun ini penuh kebahagiaan.', tr:'Chúc mừng sinh nhật lần thứ 16, Tinhyeu! Mong ngày của bạn ngọt như bánh kem và cả năm đầy hạnh phúc.' },
+ { flag:'🇹🇭', vi:'Tiếng Thái', nat:'ภาษาไทย', code:'th-TH', text:'สุขสันต์วันเกิดอายุ 16 ปีนะ Tinhyeu ขอให้มีความสุขมาก ๆ ยิ้มได้ทุกวัน และมีแต่เรื่องดี ๆ เข้ามาในชีวิตนะ', tr:'Chúc mừng sinh nhật tuổi 16 nhé Tinhyeu! Chúc bạn thật nhiều hạnh phúc, ngày nào cũng cười và cuộc sống chỉ toàn điều tốt đẹp.' },
+ { flag:'🇮🇹', vi:'Tiếng Ý', nat:'Italiano', code:'it-IT', text:'Buon compleanno per i tuoi 16 anni, Tinhyeu! Che quest\'anno sia pieno di sorrisi, dolcezza e belle sorprese.', tr:'Chúc mừng sinh nhật tuổi 16 của bạn, Tinhyeu! Mong năm nay đầy nụ cười, sự ngọt ngào và những bất ngờ đẹp.' },
+ { flag:'🇮🇳', vi:'Tiếng Hindi', nat:'हिन्दी', code:'hi-IN', text:'Tinhyeu, तुम्हें सोलहवें जन्मदिन की ढेर सारी शुभकामनाएँ! तुम्हारा हर दिन खुशियों और मुस्कान से भरा रहे।', tr:'Tinhyeu, gửi bạn thật nhiều lời chúc mừng sinh nhật lần thứ 16! Mong mỗi ngày của bạn đều đầy niềm vui và nụ cười.' },
+ { flag:'🇳🇱', vi:'Tiếng Hà Lan', nat:'Nederlands', code:'nl-NL', text:'Gefeliciteerd met je zestiende verjaardag, Tinhyeu! Ik wens je een jaar vol gelach, geluk en lekkere taart.', tr:'Chúc mừng sinh nhật lần thứ 16 của bạn, Tinhyeu! Mình chúc bạn một năm đầy tiếng cười, hạnh phúc và bánh ngon.' },
+ { flag:'🇳🇴', vi:'Tiếng Na Uy', nat:'Norsk', code:'nb-NO', text:'Gratulerer med 16-årsdagen, Tinhyeu! Jeg håper at året ditt blir fylt med latter, glede og søte overraskelser.', tr:'Chúc mừng sinh nhật 16 tuổi, Tinhyeu! Mình hy vọng năm của bạn đầy tiếng cười, niềm vui và những bất ngờ ngọt ngào.' }
+];
+let wi = 0, wBuilt = false, voices = [], speakingIdx = -1;
+const hasTTS = ('speechSynthesis' in window) && typeof SpeechSynthesisUtterance !== 'undefined';
+function loadVoices(){ if (hasTTS) try{ voices = speechSynthesis.getVoices() || []; }catch(e){ voices = []; } }
+loadVoices(); if (hasTTS) try{ speechSynthesis.addEventListener('voiceschanged', loadVoices); }catch(e){ speechSynthesis.onvoiceschanged = loadVoices; }
+const vlang = v => (v.lang || '').toLowerCase().replace('_', '-');
+function findVoice(code){
+  const want = code.toLowerCase(), base = want.split('-')[0], bases = base === 'nb' ? ['nb','no','nn'] : [base];
+  return voices.find(v => vlang(v) === want) || voices.find(v => bases.includes(vlang(v).split('-')[0]));
+}
+function setStat(msg, warn){ const s = $('#wStat'); s.textContent = msg || ''; s.className = 'vstat' + (warn ? ' warn' : ''); }
+function stopSpeech(){ if (hasTTS) try{ speechSynthesis.cancel(); }catch(e){} speakingIdx = -1; $('#wcard').classList.remove('speaking'); duck(false); }
+function speak(i){
+  const w = WISHES[i];
+  if (!hasTTS){ setStat('Trình duyệt này không hỗ trợ đọc thành tiếng (Web Speech API). Bạn vẫn có thể đọc chữ và bản dịch nhé!', true); return; }
+  loadVoices();
+  const v = findVoice(w.code);
+  if (voices.length && !v){ setStat(`Thiết bị của bạn chưa cài giọng đọc ${w.vi} (${w.code}). Bạn có thể cài thêm trong phần Cài đặt → Chuyển văn bản thành giọng nói, hoặc đọc chữ và bản dịch nhé!`, true); return; }
+  ensureAudio(); stopSpeech();
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(w.text); u.lang = v ? v.lang : w.code; if (v) u.voice = v; u.rate = .92; u.pitch = 1.05; u.volume = 1;
+    u.onstart = () => { speakingIdx = i; $('#wcard').classList.add('speaking'); setStat(`🔊 Đang đọc bằng giọng ${v ? v.name : w.code}…`); duck(true); };
+    u.onend = () => { if (speakingIdx === i){ speakingIdx = -1; $('#wcard').classList.remove('speaking'); setStat(''); duck(false); } };
+    u.onerror = e => { $('#wcard').classList.remove('speaking'); duck(false);
+      if (e && (e.error === 'canceled' || e.error === 'interrupted')) return;
+      setStat(`Không đọc được lời chúc ${w.vi} trên thiết bị này. Có thể máy chưa có giọng đọc phù hợp.`, true); };
+    try{ speechSynthesis.speak(u); setStat('Đang chuẩn bị giọng đọc…'); }catch(e){ setStat('Không thể bắt đầu đọc trên thiết bị này.', true); }
+  }, 90);
+}
+function renderWish(dir){
+  const w = WISHES[wi], card = $('#wcard');
+  $('#wFlag').textContent = w.flag; $('#wName').innerHTML = `${w.vi} <small>• ${w.nat}</small>`;
+  const n = $('#wNative'); n.textContent = w.text; n.lang = w.code.split('-')[0];
+  $('#wVi').textContent = '🇻🇳 ' + w.tr; $('#wCount').textContent = `${wi + 1} / ${WISHES.length}`; setStat('');
+  $$('.chip').forEach((c, i) => c.classList.toggle('on', i === wi));
+  const on = $('.chip.on'); if (on && on.scrollIntoView) { const box = $('#chips'); box.scrollTo({ left:on.offsetLeft - box.clientWidth / 2 + 22, behavior:'smooth' }); }
+  card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+}
+function setWish(i){ stopSpeech(); wi = (i + WISHES.length) % WISHES.length; sfx('pop'); renderWish(); }
+function initWishes(){
+  if (wBuilt) return; wBuilt = true;
+  const box = $('#chips');
+  WISHES.forEach((w, i) => { const b = document.createElement('button'); b.className = 'chip'; b.textContent = w.flag; b.setAttribute('aria-label', w.vi); b.onclick = () => setWish(i); box.appendChild(b); });
+  renderWish();
+  let sx = 0; const card = $('#wcard');
+  card.addEventListener('touchstart', e => { sx = e.changedTouches[0].clientX; }, { passive:true });
+  card.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 60) setWish(wi + (dx < 0 ? 1 : -1)); }, { passive:true });
+}
+$('#wPlay').addEventListener('click', () => speak(wi));
+$('#wStop').addEventListener('click', () => { stopSpeech(); setStat('Đã dừng đọc.'); });
+$('#wPrev').addEventListener('click', () => setWish(wi - 1));
+$('#wNextCard').addEventListener('click', () => setWish(wi + 1));
+$('#wGo').addEventListener('click', () => { unlock(3); go(3); });
+
+/* =========================================================
+   10. MÀN 3 – THỬ THÁCH TỪ VỰNG (11 câu: 4 B1 + 4 B2 + 3 C1)
+   Mỗi câu: o = 4 phương án, a = chỉ số đáp án đúng (trước khi xáo trộn)
+   ========================================================= */
+const QS = [
+ { lv:'B1', q:'Could you spread the ___ on the cake? It is made of butter and powdered sugar.', o:['icing','batter','crust','dough'], a:0,
+   why:'icing (hay frosting) là lớp kem bơ–đường phủ bên ngoài bánh. batter là hỗn hợp bột lỏng trước khi nướng, crust là lớp vỏ, dough là bột nhào.', hint:'Từ cần điền chỉ lớp kem bơ–đường phủ bên ngoài bánh, không phải nguyên liệu dùng trước khi nướng.' },
+ { lv:'B1', q:'We hung colourful ___ from the ceiling and blew up fifty balloons before the guests arrived.', o:['streamers','curtains','blankets','mirrors'], a:0,
+   why:'streamers là những dải giấy màu dài dùng để trang trí tiệc. Các từ còn lại không phải đồ trang trí tiệc treo trên trần.', hint:'Đó là những dải giấy màu dài, mỏng, thường treo trong tiệc sinh nhật.' },
+ { lv:'B1', q:'My little brother has a real ___ tooth, so he eats cakes, biscuits and chocolate every single day.', o:['sweet','sugar','candy','sour'], a:0,
+   why:'have a sweet tooth = rất thích ăn đồ ngọt (cụm cố định). Không nói "sugar tooth" hay "candy tooth".', hint:'Đây là một thành ngữ cố định, nghĩa là "rất thích đồ ngọt".' },
+ { lv:'B1', q:'My aunt usually gives me a gift ___ so that I can choose my own present in any bookshop.', o:['voucher','receipt','label','recipe'], a:0,
+   why:'gift voucher = phiếu quà tặng dùng để mua hàng. receipt là hóa đơn, label là nhãn mác, recipe là công thức nấu ăn.', hint:'Đó là một tờ phiếu có giá trị tiền, dùng để mua hàng ở cửa hàng.' },
+ { lv:'B2', q:'The dessert was absolutely ___ — I had two helpings and still wanted more!', o:['scrumptious','bland','stale','greasy'], a:0,
+   why:'scrumptious = cực kỳ ngon. bland = nhạt nhẽo, stale = cũ/ỉu, greasy = nhiều dầu mỡ.', hint:'Người nói ăn hai phần mà vẫn muốn thêm, nên từ cần điền mang nghĩa rất tích cực.' },
+ { lv:'B2', q:'Her parents decided to ___ a surprise party for her sixteenth birthday.', o:['throw','hit','drop','cast'], a:0,
+   why:'throw a party = tổ chức một bữa tiệc (collocation). Các động từ còn lại không đi với "party" theo nghĩa này.', hint:'Động từ này nghĩa gốc là "ném", nhưng đi với party thì nghĩa là "tổ chức".' },
+ { lv:'B2', q:'He gave me a really ___ present: a handmade photo album full of our old memories.', o:['thoughtful','thoughtless','forgetful','careless'], a:0,
+   why:'thoughtful = chu đáo, tinh tế (món quà được chọn bằng cả tấm lòng). thoughtless, forgetful, careless đều mang nghĩa tiêu cực.', hint:'Một món quà tự tay làm, chứa đầy kỷ niệm, thể hiện sự quan tâm – hãy chọn tính từ mang nghĩa tích cực.' },
+ { lv:'B2', q:'"Many happy ___ of the day!" is a traditional way of wishing someone a happy birthday.', o:['returns','repeats','revisits','reruns'], a:0,
+   why:'Many happy returns (of the day) là lời chúc sinh nhật truyền thống, ý là mong bạn còn đón thêm nhiều sinh nhật vui vẻ.', hint:'Từ này gợi sự "quay trở lại" – mong ngày vui này sẽ trở lại nhiều lần.' },
+ { lv:'C1', q:'The pastry chef used a blowtorch to ___ the sugar on top of the crème brûlée until it formed a crisp, golden crust.', o:['caramelise','crystallise','liquefy','ferment'], a:0,
+   why:'caramelise = làm đường chuyển sang màu nâu vàng thành caramel khi đun nóng. crystallise = kết tinh, liquefy = hóa lỏng, ferment = lên men.', hint:'Khi đun nóng đường đến màu vàng nâu, ta tạo ra caramel – hãy tìm động từ tương ứng.' },
+ { lv:'C1', q:'The ballroom was ___ with fairy lights and paper garlands, giving the whole party a magical glow.', o:['festooned','flooded','fastened','fabricated'], a:0,
+   why:'be festooned with sth = được trang hoàng dày đặc bằng thứ gì (đèn, dây hoa…). flooded = bị ngập, fastened = được buộc chặt, fabricated = bịa đặt/chế tạo.', hint:'Động từ bị động này nghĩa là "được trang trí dày đặc bằng…".' },
+ { lv:'C1', q:'Receiving such a lavish gift from a near stranger left her feeling uncomfortably ___, as she had nothing to offer in return.', o:['indebted','oblivious','nostalgic','indignant'], a:0,
+   why:'feel indebted = cảm thấy mang ơn, như đang nợ người tặng. oblivious = không hay biết, nostalgic = hoài niệm, indignant = phẫn nộ.', hint:'Cô ấy không có gì để đáp lại, nên cảm giác như đang "nợ" người tặng quà.' }
+];
+let wrongSet = new Set(), answered = false;
+function renderQuiz(){
+  const v = S.vocab;
+  if (!v.order || v.order.length !== QS.length){ v.order = shuffle(QS.map((_, i) => i)).map(q => ({ q, o:shuffle([0,1,2,3]) })); v.idx = 0; v.done = false; save(); }
+  const segs = $('#segs'); segs.innerHTML = '';
+  for (let i = 0; i < QS.length; i++){ const s = document.createElement('i'); if (i < v.idx || v.done) s.className = 'on'; else if (i === v.idx) s.className = 'now'; segs.appendChild(s); }
+  $('#quizDone').hidden = !v.done; $('#quizCard').hidden = v.done;
+  if (v.done) return;
+  const ent = v.order[v.idx], Q = QS[ent.q]; wrongSet = new Set(); answered = false;
+  $('#lockTxt').textContent = `🔒 Bánh kem đang bị khóa – hoàn thành ${QS.length - v.idx} câu nữa để mở!`;
+  $('#qCount').textContent = `Câu ${v.idx + 1}/${QS.length}`; const lv = $('#qLv'); lv.textContent = Q.lv; lv.className = 'lv ' + Q.lv;
+  $('#qText').innerHTML = Q.q.replace('___', '<span class="blank">______</span>');
+  const box = $('#qOpts'); box.innerHTML = '';
+  ent.o.forEach((real, k) => { const b = document.createElement('button'); b.className = 'opt'; b.dataset.real = real;
+    b.innerHTML = `<b>${'ABCD'[k]}</b><span></span>`; b.lastChild.textContent = Q.o[real]; b.onclick = () => answer(b, real, Q); box.appendChild(b); });
+  const f = $('#qFb'); f.className = 'fb'; f.textContent = ''; $('#qNext').hidden = true;
+}
+function answer(btn, real, Q){
+  if (answered) return; ensureAudio();
+  const f = $('#qFb');
+  if (real === Q.a){
+    answered = true; btn.classList.add('ok'); $$('.opt').forEach(o => o.disabled = true); sfx('ok');
+    const [x, y] = centerOf(btn); burst(x, y, 26, { min:2, max:8, up:3 });
+    f.className = 'fb good'; f.innerHTML = '✅ Chính xác! ' + Q.why;
+    const last = S.vocab.idx === QS.length - 1; const nb = $('#qNext'); nb.textContent = last ? 'Mở khóa bánh kem 🎂' : 'Câu tiếp theo →'; nb.hidden = false;
+  } else {
+    wrongSet.add(real); btn.classList.add('no'); btn.disabled = true; sfx('no');
+    f.className = 'fb bad'; f.innerHTML = '❌ Chưa đúng, hãy suy nghĩ lại nhé!<br>💡 ' + Q.hint;
+  }
+}
+$('#qNext').addEventListener('click', () => {
+  const v = S.vocab; sfx('click'); v.idx++;
+  if (v.idx >= QS.length){ v.done = true; save(); unlock(4); renderQuiz(); sfx('unlock'); magicFlash(); burst(innerWidth / 2, innerHeight * .4, 120, { up:8 }); rain(70); balloons(8);
+    modal({ icon:'🎂🔓', title:'Bánh kem đã được mở khóa!', html:'Bạn đã trả lời đúng cả 11 câu hỏi. Bánh sinh nhật 16 tuổi đang chờ bạn!', buttons:[{ label:'Đến bánh sinh nhật →', cls:'alt' }, { label:'Ở lại', cls:'ghost' }] }).then(i => { if (i === 0) go(4); });
+  } else { save(); renderQuiz(); window.scrollTo({ top:0, behavior:'smooth' }); }
+});
+$('#quizGo').addEventListener('click', () => go(4));
+
+/* =========================================================
+   11. MÀN 4 – BÁNH SINH NHẬT & THỔI NẾN (16 ngọn nến)
+   ========================================================= */
+let cakeBuilt = false, cdToken = 0, blowing = false;
+function buildCake(){
+  if (cakeBuilt) return; cakeBuilt = true;
+  const cols = ['#ff9ec7','#bfa8f5','#8fd3a6','#ffd1a3'];
+  let candles = '';
+  for (let i = 0; i < 16; i++){
+    const back = i < 8, k = back ? i : i - 8, x = back ? 95 + k * 18.6 : 88 + k * 20.6, base = back ? 124 : 138, col = cols[i % 4];
+    candles += `<g class="candle" data-i="${i}"><rect x="${x - 3}" y="${base - 26}" width="6" height="26" rx="2" fill="${col}"/><rect x="${x - 3}" y="${base - 20}" width="6" height="3" fill="#ffffffaa"/>
+      <circle class="smoke" cx="${x}" cy="${base - 34}" r="3" fill="#cfc4e3"/>
+      <g class="fglow"><circle cx="${x}" cy="${base - 33}" r="9" fill="#fff1a8" opacity=".45"/></g>
+      <ellipse class="flame" cx="${x}" cy="${base - 33}" rx="3.4" ry="6" fill="#ffd35c"/><ellipse class="flame" cx="${x}" cy="${base - 31.5}" rx="1.7" ry="3.4" fill="#fff6c9"/></g>`;
+  }
+  let drips = ''; for (let i = 0; i < 10; i++){ const x = 84 + i * 17.5; drips += `<circle cx="${x}" cy="${146 + (i % 2) * 4}" r="${6 + (i % 3)}" fill="#fff"/>`; }
+  let bdrips = ''; for (let i = 0; i < 14; i++){ const x = 40 + i * 18.5; bdrips += `<circle cx="${x}" cy="${194 + (i % 2) * 5}" r="${7 + (i % 3)}" fill="#fff"/>`; }
+  const deco = [55,100,145,175,220,265].map((x, i) => `<circle cx="${x}" cy="255" r="6" fill="${i % 2 ? '#ff7fb5' : '#bfa8f5'}"/><circle cx="${x - 2}" cy="253" r="1.6" fill="#fff"/>`).join('');
+  $('#cakeSvg').innerHTML = `<svg viewBox="0 0 320 300" role="img" aria-label="Bánh kem sinh nhật 16 ngọn nến">
+    <ellipse cx="160" cy="276" rx="150" ry="16" fill="#e9defe"/><ellipse cx="160" cy="272" rx="150" ry="14" fill="#fff" stroke="#d9c8ff" stroke-width="2"/>
+    <rect x="28" y="190" width="264" height="82" rx="20" fill="#ffc4de"/><rect x="28" y="190" width="264" height="14" rx="7" fill="#ffd9ea"/>${bdrips}
+    <text x="160" y="248" font-size="44" font-weight="900" text-anchor="middle" fill="#fff" stroke="#e8579a" stroke-width="2.5" paint-order="stroke" style="font-family:inherit">16</text>${deco}
+    <rect x="66" y="128" width="188" height="68" rx="16" fill="#e4d4ff"/><ellipse cx="160" cy="130" rx="94" ry="16" fill="#fff"/>${drips}
+    <circle cx="106" cy="168" r="4" fill="#ff9ec7"/><circle cx="160" cy="172" r="4" fill="#ff9ec7"/><circle cx="214" cy="168" r="4" fill="#ff9ec7"/>
+    ${candles}</svg>`;
+}
+async function startCountdown(){
+  buildCake(); const my = ++cdToken, cd = $('#count'), btn = $('#blowBtn');
+  if (S.cake){ candlesOutUI(); return; }
+  blowing = false; $$('.candle').forEach(c => c.classList.remove('out')); $('#halo').classList.remove('dim');
+  btn.disabled = true; $('#cakeNext').hidden = true; $('#cakeSub').textContent = 'Chuẩn bị ước một điều ước thật đẹp…';
+  for (const n of ['3','2','1']){
+    if (my !== cdToken || S.cur !== 4) return;
+    cd.textContent = n; cd.classList.remove('tick'); void cd.offsetWidth; cd.classList.add('tick'); sfx('tick'); await sleep(950);
+  }
+  if (my !== cdToken || S.cur !== 4) return;
+  cd.classList.remove('tick'); cd.textContent = '✨'; btn.disabled = false; btn.classList.add('pulse'); sparkles(8);
+  $('#cakeSub').textContent = 'Nhắm mắt, ước một điều ước rồi thổi nến nào!';
+}
+function candlesOutUI(){
+  $$('.candle').forEach(c => c.classList.add('out')); $('#halo').classList.add('dim'); $('#count').textContent = '💫';
+  $('#blowBtn').disabled = true; $('#blowBtn').classList.remove('pulse'); $('#cakeNext').hidden = false; $('#cakeSub').textContent = 'Điều ước của bạn đã bay lên rồi 💫';
+}
+async function blow(){
+  if (blowing || S.cake) return; blowing = true; ensureAudio();
+  const btn = $('#blowBtn'); btn.disabled = true; btn.classList.remove('pulse'); sfx('blow');
+  const cs = $$('.candle'), order = shuffle(cs);
+  for (const c of order){ c.classList.add('out'); sfx('candle'); await sleep(150); }
+  $('#halo').classList.add('dim'); $('#count').textContent = '🎉'; $('#cakeSub').textContent = 'Điều ước của bạn đã bay lên rồi 💫';
+  S.cake = true; unlock(5); save();
+  const [x, y] = centerOf($('#cakeSvg')); sfx('unlock'); magicFlash(); burst(x, y, 130, { up:9 }); rain(80); hearts(18); balloons(8); sparkles(14);
+  await sleep(700); $('#cakeNext').hidden = false;
+  modal({ icon:'🎂💖', title:'Điều ước đã được gửi đi!', html:'16 ngọn nến đã tắt hết. Chỉ còn một bí mật cuối cùng đang chờ bạn…', buttons:[{ label:'Mở hộp quà 🎁', cls:'alt' }, { label:'Ở lại', cls:'ghost' }] }).then(i => { if (i === 0) go(5); });
+}
+$('#blowBtn').addEventListener('click', blow);
+$('#cakeNext').addEventListener('click', () => go(5));
+
+/* =========================================================
+   12. MÀN 5 – HỘP QUÀ BÍ MẬT
+   ========================================================= */
+let giftOpen = false;
+function initGift(){
+  giftOpen = false; $('#gift').classList.remove('open'); $('#final').hidden = true; $('#replayBtn').hidden = true;
+  $$('#final .line').forEach(l => l.classList.remove('show')); $('#giftSub').textContent = 'Chạm vào hộp quà để mở nhé!';
+}
+async function openGift(){
+  ensureAudio();
+  if (giftOpen){ const [x, y] = centerOf($('#gift')); burst(x, y, 50, { up:7 }); sfx('pop'); return; }
+  giftOpen = true; const g = $('#gift'); g.classList.add('open'); sfx('gift'); $('#giftSub').textContent = 'Bất ngờ chưa nè! 🎉';
+  const [x, y] = centerOf(g); burst(x, y - 30, 130, { up:10 }); rain(80); garden(16); hearts(12); sparkles(14); balloons(6);
+  await sleep(900); $('#final').hidden = false; $('#final').scrollIntoView({ behavior:'smooth', block:'center' });
+  for (const l of $$('#final .line')){ await sleep(900); l.classList.add('show'); sfx('pop'); }
+  await sleep(500); burst(innerWidth / 2, innerHeight * .35, 90, { up:8 }); $('#replayBtn').hidden = false;
+}
+$('#gift').addEventListener('click', openGift);
+
+/* =========================================================
+   13. ĐIỀU KHIỂN CHUNG: lùi, nhạc, âm lượng, chơi lại
+   ========================================================= */
+$('#backBtn').addEventListener('click', () => go(S.cur - 1));
+function renderSoundUI(){ const b = $('#musicBtn'); b.textContent = S.music ? '🎵' : '🔇'; b.classList.toggle('off', !S.music); b.setAttribute('aria-pressed', S.music); $('#vol').value = Math.round(S.vol * 100); }
+$('#musicBtn').addEventListener('click', () => {
+  ensureAudio(); S.music = !S.music; save(); renderSoundUI();
+  if (S.music){ if (S.opened) startMusic(); toast('Nhạc đã bật 🎵'); } else { stopMusic(); toast('Nhạc đã tắt 🔇'); }
+});
+$('#vol').addEventListener('input', e => {
+  S.vol = e.target.value / 100; save(); ensureAudio(); if (A.master) A.master.gain.setTargetAtTime(S.vol, A.ctx.currentTime, .03);
+});
+async function restart(){
+  const i = await modal({ icon:'🔄', title:'Chơi lại từ đầu?', html:'Toàn bộ tiến độ sẽ được xóa và bạn sẽ bắt đầu lại hành trình từ phong thư.', buttons:[{ label:'Chơi lại', cls:'alt' }, { label:'Huỷ', cls:'ghost' }] });
+  if (i !== 0) return;
+  stopSpeech(); stopMusic(); const keep = { music:S.music, vol:S.vol };
+  S = Object.assign(JSON.parse(JSON.stringify(DEF)), keep); save(); location.reload();
+}
+$('#restartBtn').addEventListener('click', restart);
+$('#replayBtn').addEventListener('click', restart);
+
+/* Tương tác đầu tiên mới khởi tạo âm thanh (tránh trình duyệt chặn autoplay) */
+document.addEventListener('pointerdown', ensureAudio, { passive:true });
+document.addEventListener('keydown', ensureAudio);
+document.addEventListener('visibilitychange', () => { if (document.hidden){ stopSpeech(); if (A.ctx) A.ctx.suspend(); } else if (A.ctx) A.ctx.resume(); });
+
+/* =========================================================
+   14. KHỞI ĐỘNG
+   ========================================================= */
+renderSoundUI(); show(S.cur);
+})();
+</script>
+</body>
+</html>
